@@ -21,6 +21,10 @@ module "ec2_instance_1" {
   subnet_id              = aws_subnet.subnet1.id
   vpc_security_group_ids = [module.ec2_sg.security_group_id]
     associate_public_ip_address = true
+  tags = {
+    Name = var.ec2_name_1
+    Role = "bei_front"
+  }
 
 }
 
@@ -37,6 +41,11 @@ module "ec2_instance_2" {
   subnet_id              = aws_subnet.subnet1.id
   vpc_security_group_ids = [module.ec2_sg.security_group_id] 
   associate_public_ip_address = true
+
+  tags = {
+    Name = var.ec2_name_2
+    Role = "bei_front"
+  }
 
 }
 

@@ -1,0 +1,23 @@
+
+- name: Create empty file with 10MB
+  command: dd if=/dev/zero of=/disk_wwwww.img bs=1M count=10
+
+- name: Format file as ext4 filesystem
+  command: mkfs.ext4 /disk_wwwww.img
+
+- name: Create mount point
+  file:
+    path: /var/www
+    state: directory ##create a /var/www repository
+
+- name: Mount filesystem on /var/www
+  command: mount -o loop /disk_wwwww.img /var/www
+
+##mount to /var.log.apache2
+- name: Create the apache2 log folder
+  file:
+    path: /var/log/apache2
+    state: directory ##create a /var/www repository
+
+- name: Mount filesystem on /var/www
+  command: mount -o loop /disk_www.img /var/log/apache2

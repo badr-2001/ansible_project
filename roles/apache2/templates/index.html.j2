@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello World</title>
+</head>
+<body>
+    <h1>Hello World from the {{ ansible_hostname }}</h1>
+    <p>My IP address is: {{ ansible_default_ipv4.address }}</p>
+    <p>I have a {{ ansible_distribution }} {{ ansible_distribution_version }} OS</p>
+    <p>Total memory: {{ (ansible_memtotal_mb / 1024) | round(2) }} GB</p>
+</body>
+</html>

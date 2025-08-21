@@ -1,0 +1,89 @@
+data "aws_vpc" "existing" {
+  id = var.vpc_id
+}
+
+resource "aws_subnet" "subnet1" {
+  vpc_id            = data.aws_vpc.existing.id
+  cidr_block        = var.bei_subnet_cidr
+  tags = {
+    Name = var.bei_subnet_name
+  }
+}
+
+module "ec2_instance_1" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+
+  name           = var.ec2_name_1
+  ami            = var.ami
+  instance_type  = var.instance_type
+  key_name       = aws_key_pair.bei2_key.key_name
+
+  subnet_id              = aws_subnet.subnet1.id
+  vpc_security_group_ids = [module.ec2_sg.security_group_id]
+    associate_public_ip_address = true
+
+}
+
+
+
+module "ec2_instance_2" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+
+  name           = var.ec2_name_2
+  ami            = var.ami
+  instance_type  = var.instance_type
+  key_name       = aws_key_pair.bei2_key.key_name
+
+  subnet_id              = aws_subnet.subnet1.id
+  vpc_security_group_ids = [module.ec2_sg.security_group_id] 
+  associate_public_ip_address = true
+
+}
+
+module "ec2_sg" {
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "5.1.0"
+
+  name        = var.sg_name
+  description = "Allow only SSH inbound, all outbound"
+  vpc_id      = data.aws_vpc.existing.id
+
+  ingress_with_cidr_blocks = [
+    {
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = "0.0.0.0/0"
+    }
+  ]
+
+  egress_rules = ["all-all"]
+}
+
+resource "aws_key_pair" "bei2_key" {
+  key_name   = "bei2_key"
+  public_key = file("${path.module}/bei2_key.pub")
+}
+
+data "aws_internet_gateway" "igw" {
+  internet_gateway_id = var.igw_id
+}
+
+## Route Tables -----------------------------
+resource "aws_route_table" "public_rt" {
+  vpc_id = data.aws_vpc.existing.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = data.aws_internet_gateway.igw.id
+  }
+
+  tags = {
+    Name = var.rt_name
+  }
+}
+
+resource "aws_route_table_association" "public_assoc" {
+  subnet_id      = aws_subnet.subnet1.id
+  route_table_id = aws_route_table.public_rt.id
+}

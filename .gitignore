@@ -1,0 +1,12 @@
+bei2_key
+*.pub
+
+*.tfstate
+*.tfstate.*
+.terraform/
+*.backup
+*.log
+crash.log
+##*.tfvars
+*.tfplan
+.terraform.lock.hcl

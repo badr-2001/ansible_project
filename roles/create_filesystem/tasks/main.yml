@@ -16,8 +16,8 @@
 ##mount to /var.log.apache2
 - name: Create the apache2 log folder
   file:
-    path: "{{apache_log_folder}}"
-    state: directory ##create a /var/www repository
+    path: "{{apache_log_path}}"
+    state: directory ##create a apache log path  repository
 
 - name: Mount filesystem on /var/www
-  command: mount -o loop /{{file_name}} /var/log/apache2
+  command: mount -o loop /{{apache_file_name}} "{{apache_log_path}}"

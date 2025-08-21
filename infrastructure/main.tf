@@ -16,7 +16,7 @@ module "ec2_instance_1" {
   name           = var.ec2_name_1
   ami            = var.ami
   instance_type  = var.instance_type
-  key_name       = aws_key_pair.bei2_key.key_name
+  key_name       = aws_key_pair.bei2_pub_key.key_name
 
   subnet_id              = aws_subnet.subnet1.id
   vpc_security_group_ids = [module.ec2_sg.security_group_id]
@@ -36,7 +36,7 @@ module "ec2_instance_2" {
   name           = var.ec2_name_2
   ami            = var.ami
   instance_type  = var.instance_type
-  key_name       = aws_key_pair.bei2_key.key_name
+  key_name       = aws_key_pair.bei2_pub_key.key_name
 
   subnet_id              = aws_subnet.subnet1.id
   vpc_security_group_ids = [module.ec2_sg.security_group_id] 
@@ -63,15 +63,21 @@ module "ec2_sg" {
       to_port     = 22
       protocol    = "tcp"
       cidr_blocks = "0.0.0.0/0"
-    }
+    },
+  {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = "0.0.0.0/0"
+  }
   ]
 
   egress_rules = ["all-all"]
 }
 
-resource "aws_key_pair" "bei2_key" {
-  key_name   = "bei2_key"
-  public_key = file("${path.module}/bei2_key.pub")
+resource "aws_key_pair" "bei2_pub_key" {
+  key_name   = "bei2_pub_key"
+  public_key = file(var.key_path)
 }
 
 data "aws_internet_gateway" "igw" {

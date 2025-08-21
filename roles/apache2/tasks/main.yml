@@ -21,11 +21,11 @@
 
 - name: Ensure /var/www/html exists
   ansible.builtin.file:
-    path: /var/www/html
+    path: "{{index_path}}"
     state: directory
 
 - name: Deploy custom index.html
   ansible.builtin.template:
-    src: index.html.j2
-    dest: /var/www/html/index.html
+    src: "{{index_template_path}}"
+    dest: "{{custom_index_path}}"
     

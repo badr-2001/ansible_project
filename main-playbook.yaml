@@ -5,6 +5,12 @@
   roles:
     - copy_key
 
+- name: filesystem
+  hosts: all
+  become: true
+  roles:
+    - create_filesystem
+
 
 
 - name: Install appache2

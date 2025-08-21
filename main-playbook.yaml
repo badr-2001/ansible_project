@@ -6,12 +6,6 @@
     - copy_key
 
 
-- name: Install logrotate
-  hosts: all
-  become: true
-  roles:
-    - logrotate
-
 
 - name: Install appache2
   hosts: all
@@ -19,3 +13,8 @@
   roles:
     - apache2
 
+- name: Install logrotate
+  hosts: all
+  become: true
+  roles:
+    - logrotate

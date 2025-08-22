@@ -1,6 +1,6 @@
 bei2_key
 *.pub
-
+.vscode/
 *.tfstate
 *.tfstate.*
 .terraform/

@@ -62,19 +62,19 @@ module "ec2_sg" {
       from_port   = 22
       to_port     = 22
       protocol    = "tcp"
-      cidr_blocks = "0.0.0.0/0"
+      cidr_blocks = "0.0.0.0/0" //not a real world case
     },
     {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = "0.0.0.0/0"
+    cidr_blocks = "0.0.0.0/0" //not a real world case
   },
   {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = "0.0.0.0/0"
+    cidr_blocks = "0.0.0.0/0" //not a real world case
   }
   ]
 
@@ -107,4 +107,16 @@ resource "aws_route_table" "public_rt" {
 resource "aws_route_table_association" "public_assoc" {
   subnet_id      = aws_subnet.subnet1.id
   route_table_id = aws_route_table.public_rt.id
+}
+
+resource "local_file" "instance_ip_1" {
+  content         = "ansible_host: ${module.ec2_instance_1.public_ip}"
+  filename        = "${path.module}/../host_vars/front1.yml"
+  file_permission = "0600"
+}
+
+resource "local_file" "instance_ip_2" {
+  content         = "ansible_host: ${module.ec2_instance_2.public_ip}"
+  filename        = "${path.module}/../host_vars/front2.yml"
+  file_permission = "0600"
 }

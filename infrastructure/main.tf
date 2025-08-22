@@ -54,7 +54,7 @@ module "ec2_sg" {
   version = "5.1.0"
 
   name        = var.sg_name
-  description = "Allow only SSH inbound, all outbound"
+  description = "Allow only SSH inbound , 8080 jenkins and 80 for apache2, all outbound"
   vpc_id      = data.aws_vpc.existing.id
 
   ingress_with_cidr_blocks = [
@@ -64,6 +64,12 @@ module "ec2_sg" {
       protocol    = "tcp"
       cidr_blocks = "0.0.0.0/0"
     },
+    {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = "0.0.0.0/0"
+  },
   {
     from_port   = 8080
     to_port     = 8080
